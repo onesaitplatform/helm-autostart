@@ -6,14 +6,14 @@ description: |-
 
   Usage:
 
-  > helm auto-start install onesaitplatform/onesait-platform-chart \
+  > helm autostart install onesaitplatform/onesait-platform-chart \
         --namespace onesait-platform \
         --generate-name \
         --version 2
 
   or simply
 
-  > helm auto-start --namespace <namespace_name>
+  > helm autostart --namespace <namespace_name>
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/auto-start.sh"
 hooks:
