@@ -1,0 +1,21 @@
+me: "certgen"
+version: "1.0"
+usage: "Auto-start platform modules on OpenShift"
+description: |-
+  This plugin automatically starts the platform modules deployed on OpenShift
+
+  Usage:
+
+  > helm auto-start install onesaitplatform/onesait-platform-chart \
+  --namespace onesait-platform \
+  --generate-name \
+  --version 2
+
+  or simply
+
+  > helm auto-start
+ignoreFlags: false
+command: "$HELM_PLUGIN_DIR/auto-start.sh"
+hooks:
+  install: "cd $HELM_PLUGIN_DIR; scripts/auto-start.sh"
+  update: "cd $HELM_PLUGIN_DIR; scripts/auto-start.sh"

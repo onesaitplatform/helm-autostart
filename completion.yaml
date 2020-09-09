@@ -1,0 +1,4 @@
+name: auto-start
+flags:
+  - domain
+  - host
