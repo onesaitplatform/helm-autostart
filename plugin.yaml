@@ -1,4 +1,4 @@
-me: "certgen"
+me: "autostart"
 version: "1.0"
 usage: "Auto-start platform modules on OpenShift"
 description: |-
