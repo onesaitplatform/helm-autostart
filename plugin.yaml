@@ -13,7 +13,7 @@ description: |-
 
   or simply
 
-  > helm autostart --k8s_namespace <namespace_name>
+  > helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --op_modules <true/false> --configinit <true/false>
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/autostart.sh"
 hooks:

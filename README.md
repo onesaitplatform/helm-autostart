@@ -30,9 +30,12 @@ Requirements:
 
 - Available flags:
   - namesapce: namespace which contents the OP deployments
+  - persistence: enables persistence pods deployment
+  - op_modules: enables op_modules pods deployment
+  - configinti: enables configinit pod deployment, wait 5 minutes and scale it to zero again
 
 ```
-> helm autostart --namespace <op_namespace>
+> helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --op_modules <true/false> --configinit <true/false>
 ```
 
 Once the plugin execution is finished, the platform pods will be scaled.

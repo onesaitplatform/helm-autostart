@@ -1,3 +1,6 @@
 name: autostart
 flags:
 - k8s_namespace
+- persistence
+- op_modules
+- configinit
