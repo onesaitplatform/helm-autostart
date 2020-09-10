@@ -7,7 +7,7 @@ help() {
   echo
   echo "Plugin usage:"
   echo
-  echo "helm auto-start --namespace onesait-platform"
+  echo "helm autostart --namespace onesait-platform"
   echo
 }
 
