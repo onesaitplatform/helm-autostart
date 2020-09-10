@@ -34,13 +34,9 @@ source $HELM_PLUGIN_DIR/config.properties
 
 echo "K8s Namespace: "$namespace
 
-if [[ ! -d  $(pwd)/ssl ]]; then
-  mkdir $(pwd)/ssl
-fi
-
 params=("$@")
 
-parseParams
+#parseParams
 
 echo $namespace
 	                   
