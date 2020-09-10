@@ -1,21 +1,21 @@
 name: "certgen"
 version: "1.0"
-usage: "Self signed certificates generation"
+usage: "Autostart OP modules en K8s"
 description: |-
-  This plugin generates self signed certificate for route (Openshift) and in form of secret for Ingress (k8s)
+  This plugin escale Onesait Platform pods on k8s deployments
 
   Usage:
 
-  > helm certgen install onesaitplatform/onesait-platform-chart \
+  > helm autostart install onesaitplatform/onesait-platform-chart \
                --namespace onesait-platform \
                --generate-name \
                --version 2
 
   or simply
 
-  > helm certgen
+  > helm autostart --namespace <namespace_name>
 ignoreFlags: false
-command: "$HELM_PLUGIN_DIR/create-certs-fullchain.sh"
+command: "$HELM_PLUGIN_DIR/autostart.sh"
 hooks:
-  install: "cd $HELM_PLUGIN_DIR; scripts/install_plugin.sh"
-  update: "cd $HELM_PLUGIN_DIR; scripts/install_plugin.sh"
+  install: "cd $HELM_PLUGIN_DIR; scripts/autostart.sh"
+  update: "cd $HELM_PLUGIN_DIR; scripts/autostart.sh"
