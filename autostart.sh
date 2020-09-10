@@ -31,7 +31,7 @@ parseParams() {
     exit 1
   fi
 
-  if [[ ${params[4} != '--op_modules' ]]; then
+  if [[ ${params[4]} != '--op_modules' ]]; then
     echo "Bad parameter! --op_modules"
     help
     exit 1
