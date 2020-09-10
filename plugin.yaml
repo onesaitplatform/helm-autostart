@@ -1,4 +1,4 @@
-name: "certgen"
+name: "autostart"
 version: "1.0"
 usage: "Autostart OP modules en K8s"
 description: |-
