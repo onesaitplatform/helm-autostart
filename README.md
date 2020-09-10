@@ -1,12 +1,11 @@
-## Helm plugin for self signed certificates generation
+## Helm plugin to deploy the platform pods
 
-This plugin allows to generate self signed certificates, additionally generates and deploys Openshift route manifest file including complete certificate chain and private key.
+It allows us to start the pods in an easy and simple way.
 
 Requirements:
 
 - Helm v3 installed
 - oc cli installed
-- OpenSSL installed
 
 ### Plugin installation
 
