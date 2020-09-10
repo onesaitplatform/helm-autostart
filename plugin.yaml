@@ -1,21 +1,21 @@
-name: "autostart"
+name: "certgen"
 version: "1.0"
-usage: "Auto-start platform modules on OpenShift"
+usage: "Self signed certificates generation"
 description: |-
-  This plugin automatically starts the platform modules deployed on OpenShift
+  This plugin generates self signed certificate for route (Openshift) and in form of secret for Ingress (k8s)
 
   Usage:
 
-  > helm autostart install onesaitplatform/onesait-platform-chart \
-        --namespace onesait-platform \
-        --generate-name \
-        --version 2
+  > helm certgen install onesaitplatform/onesait-platform-chart \
+               --namespace onesait-platform \
+               --generate-name \
+               --version 2
 
   or simply
 
-  > helm autostart --namespace <namespace_name>
+  > helm certgen
 ignoreFlags: false
-command: "$HELM_PLUGIN_DIR/autostart.sh"
+command: "$HELM_PLUGIN_DIR/create-certs-fullchain.sh"
 hooks:
   install: "cd $HELM_PLUGIN_DIR; scripts/install_plugin.sh"
   update: "cd $HELM_PLUGIN_DIR; scripts/install_plugin.sh"

@@ -1,3 +1,4 @@
-name: autostart
+name: certgen
 flags:
-  - namespace
+- domain
+- host
