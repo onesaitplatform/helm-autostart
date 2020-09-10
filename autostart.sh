@@ -30,9 +30,9 @@ parseParams() {
 }
 
 # Load configuration file
-source $HELM_PLUGIN_DIR/config.properties
+#source $HELM_PLUGIN_DIR/config.properties
 
-echo "K8s Namespace: $namespace"
+echo "K8s Namespace: $HELM_NAMESPACE"
 
 params=("$@")
 
