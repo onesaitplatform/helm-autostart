@@ -117,3 +117,20 @@ echo "Desplegando cosas"
 	    
 #echo "[$(date)] Starting Load Balancer deployment" >> /var/log/onesait.log
 #kubectl scale deployment loadbalancer --namespace=$domain --replicas=1 2>&1 >> /var/log/onesait.log
+
+# Declare an array and delete arguments
+declare -a ARGS=()
+declare -i argcounter=0
+for var in "$@"; do
+    ((argcounter++))
+
+    # Ignore host and domain arguments
+    if (( $argcounter < 5 )); then
+        continue
+    fi
+
+    ARGS+=($var)
+done
+
+$HELM_BIN "${ARGS[@]}"
+
