@@ -7,7 +7,7 @@ help() {
   echo
   echo "Plugin usage:"
   echo
-  echo "helm autostart --namespace onesait-platform"
+  echo "helm autostart --k8s_namespace onesait-platform"
   echo
 }
 
@@ -19,27 +19,23 @@ parseParams() {
     exit 1
   fi
 
-  if [[ ${params[0]} != '--namespace' ]]; then
-    echo "Bad parameter! --namespace"
+  if [[ ${params[0]} != '--k8s_namespace' ]]; then
+    echo "Bad parameter! --k8s_namespace"
     help
     exit 1
   fi
 
-  namespace=${params[1]}
+  k8s_namespace=${params[1]}
 
 }
 
-echo "K8s Namespace: "$namespace
-
-if [[ ! -d  $(pwd)/ssl ]]; then
-  mkdir $(pwd)/ssl
-fi
+echo "K8s Namespace: "$k8s_namespace
 
 params=("$@")
 
 parseParams
 
-echo $namespace
+echo $k8s_namespace
                      
 echo "[$(date)] Starting quasar deployment" >> /var/log/onesait.log
 echo "Desplegando cosas"
