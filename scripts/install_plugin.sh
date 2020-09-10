@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "Installing plugin..."
+echo "Installing plugin...."
 
 exit 0
