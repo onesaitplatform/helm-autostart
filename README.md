@@ -34,7 +34,7 @@ Requirements:
   - configinti: enables configinit pod deployment, wait 5 minutes and scale it to zero again
 
 ```
-> helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --op_modules <true/false> --configinit <true/false>
+> helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --loadbalancer <true/false>
 ```
 
 Once the plugin execution is finished, the platform pods will be scaled.

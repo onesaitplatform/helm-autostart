@@ -2,5 +2,18 @@ name: autostart
 flags:
 - k8s_namespace
 - persistence
-- op_modules
 - configinit
+- zookeeper
+- cacheservice
+- controlpanel
+- router
+- iotbroker
+- oauth
+- apimanager
+- dashboard
+- rtdbmaintainer
+- devicesimulator
+- monitoringui
+- notebooks
+- dataflow
+- loadbalancer
