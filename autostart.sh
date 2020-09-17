@@ -7,13 +7,13 @@ help() {
   echo
   echo "Plugin usage:"
   echo
-  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --loadbalancer <true/false>"
+  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> <start/stop>"
   echo
 }
 
 parseParams() {
 
-  if [[ ${#params[@]} -lt 34 ]]; then
+  if [[ ${#params[@]} -lt 41 ]]; then
     echo "Bad number of params!"
     help
     exit 1
@@ -115,7 +115,26 @@ parseParams() {
     exit 1
   fi
 
-  if [[ ${params[32]} != '--loadbalancer' ]]; then
+  if [[ ${params[32]} != '--flowengine' ]]; then
+    echo "Bad parameter! --flowengine"
+    help
+    exit 1
+  fi
+
+  if [[ ${params[34]} != '--rulesengine' ]]; then
+    echo "Bad parameter! --rulesengine"
+    help
+    exit 1
+  fi
+
+  if [[ ${params[36]} != '--bpmengine' ]]; then
+    echo "Bad parameter! --bpmengine"
+    help
+    exit 1
+  fi
+
+
+  if [[ ${params[38]} != '--loadbalancer' ]]; then
     echo "Bad parameter! --loadbalancer"
     help
     exit 1
@@ -162,117 +181,272 @@ echo "[$(date)] Notebooks deployment:"
 echo ${params[29]}
 echo "[$(date)] Streamsets deployment:"
 echo ${params[31]}
-echo "[$(date)] Loadbalancer deployment:"
+echo "[$(date)] Flowengine deployment:"
 echo ${params[33]}
+echo "[$(date)] Rulesengine deployment:"
+echo ${params[35]}
+echo "[$(date)] Bpmengine deployment:"
+echo ${params[37]}
+echo "[$(date)] Loadbalancer deployment:"
+echo ${params[39]}
 
 
-
-if [[ ${params[3]} == true ]]; then
-  sleep 5s
-  echo "[$(date)] Starting configdb deployment" 
-  kubectl scale deployment configdb --namespace=$k8s_namespace --replicas=1  
-  sleep 10s
-  echo "[$(date)] Starting realtimdb deployment" 
-  kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=1
-  sleep 10s  
-  echo "[$(date)] Starting quasar deployment" 
-  kubectl scale deployment quasar --namespace=$k8s_namespace --replicas=1
-  sleep 10s 
-  echo "[$(date)] Starting elasticdb deployment" 
-  kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=1
-  sleep 10s 
-  echo "[$(date)] Starting schedulerdb deployment" 
-  kubectl scale deployment schedulerdb --namespace=$k8s_namespace --replicas=1 
+if [ "$40" = "start" ]; then
+  if [[ ${params[3]} == true ]]; then
+    sleep 5s
+    echo "[$(date)] Starting configdb deployment" 
+    kubectl scale deployment configdb --namespace=$k8s_namespace --replicas=1  
+    sleep 10s
+    echo "[$(date)] Starting realtimdb deployment" 
+    kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=1
+    sleep 10s  
+    echo "[$(date)] Starting quasar deployment" 
+    kubectl scale deployment quasar --namespace=$k8s_namespace --replicas=1
+    sleep 10s 
+    echo "[$(date)] Starting elasticdb deployment" 
+    kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=1
+    sleep 10s 
+    echo "[$(date)] Starting schedulerdb deployment" 
+    kubectl scale deployment schedulerdb --namespace=$k8s_namespace --replicas=1 
+  fi
+  
+  if [[ ${params[5]} == true ]]; then
+    echo "[$(date)] Starting configinit deployment"
+    sleep 10s 
+    kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=1
+    sleep 300s  
+    kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[7]} == true ]]; then 
+    sleep 10s                 
+    echo "[$(date)] Starting zookeeper deployment" 
+    kubectl scale deployment zookeeper --namespace=$k8s_namespace --replicas=1 
+  fi
+  
+  if [[ ${params[9]} == true ]]; then  
+    sleep 20s  
+    echo "[$(date)] Starting Cache service" 
+    kubectl scale deployment cacheservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[11]} == true ]]; then  
+    sleep 30s      
+    echo "[$(date)] Starting Control Panel deployment" 
+    kubectl scale deployment controlpanelservice --namespace=$k8s_namespace --replicas=1
+    sleep 400s 
+  fi
+     
+  if [[ ${params[13]} == true ]]; then    
+    echo "[$(date)] Starting Semantic Information Broker deployment" 
+    kubectl scale deployment routerservice --namespace=$k8s_namespace --replicas=1  
+    sleep 60s
+  fi
+     
+  if [[ ${params[15]} == true ]]; then       
+    echo "[$(date)] Starting IoT broker deployment" 
+    kubectl scale deployment iotbrokerservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[17]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Starting OAuth deployment" 
+    kubectl scale deployment oauthservice --namespace=$k8s_namespace --replicas=1  
+  fi
+     
+  if [[ ${params[19]} == true ]]; then
+    sleep 60s    
+    echo "[$(date)] Starting API manager deployment" 
+    kubectl scale deployment apimanagerservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[21]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting DashBoard Engine deployment" 
+    kubectl scale deployment dashboardengineservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[23]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting RTDB Maintainer deployment" 
+    kubectl scale deployment rtdbmaintainerservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[25]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting Device Simulator deployment" 
+    kubectl scale deployment devicesimulator --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[27]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting Monitoring UI deployment" 
+    kubectl scale deployment monitoringuiservice --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[29]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Notebooks deployment" 
+    kubectl scale deployment zeppelin --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[31]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Streamsets deployment" 
+    kubectl scale deployment streamsets --namespace=$k8s_namespace --replicas=1
+  fi
+  
+  if [[ ${params[33]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Flowengine deployment" 
+    kubectl scale deployment flowengine --namespace=$k8s_namespace --replicas=1
+  fi
+  
+  if [[ ${params[35]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting rules-engine-service deployment" 
+    kubectl scale deployment rules-engine-service --namespace=$k8s_namespace --replicas=1
+  fi
+  
+  if [[ ${params[37]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Bpmengine deployment" 
+    kubectl scale deployment bpmengine --namespace=$k8s_namespace --replicas=1
+  fi
+     
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting Load Balancer deployment" 
+    kubectl scale deployment loadbalancer --namespace=$k8s_namespace --replicas=1  
+  fi
 fi
 
-if [[ ${params[5]} == true ]]; then
-  echo "[$(date)] Starting configinit deployment"
-  sleep 10s 
-  kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=1
-  sleep 300s  
-  kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=0
-fi
-   
-if [[ ${params[7]} == true ]]; then 
-  sleep 10s                 
-  echo "[$(date)] Starting zookeeper deployment" 
-  kubectl scale deployment zookeeper --namespace=$k8s_namespace --replicas=1 
-fi
-
-if [[ ${params[9]} == true ]]; then  
-  sleep 20s  
-  echo "[$(date)] Starting Cache service" 
-  kubectl scale deployment cacheservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[11]} == true ]]; then  
-  sleep 30s      
-  echo "[$(date)] Starting Control Panel deployment" 
-  kubectl scale deployment controlpanelservice --namespace=$k8s_namespace --replicas=1
-  sleep 400s 
-fi
-   
-if [[ ${params[13]} == true ]]; then    
-  echo "[$(date)] Starting Semantic Information Broker deployment" 
-  kubectl scale deployment routerservice --namespace=$k8s_namespace --replicas=1  
-  sleep 60s
-fi
-   
-if [[ ${params[15]} == true ]]; then       
-  echo "[$(date)] Starting IoT broker deployment" 
-  kubectl scale deployment iotbrokerservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[17]} == true ]]; then    
-  sleep 60s      
-  echo "[$(date)] Starting OAuth deployment" 
-  kubectl scale deployment oauthservice --namespace=$k8s_namespace --replicas=1  
-fi
-   
-if [[ ${params[19]} == true ]]; then
-  sleep 60s    
-  echo "[$(date)] Starting API manager deployment" 
-  kubectl scale deployment apimanagerservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[21]} == true ]]; then  
-  sleep 60s    
-  echo "[$(date)] Starting DashBoard Engine deployment" 
-  kubectl scale deployment dashboardengineservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[23]} == true ]]; then  
-  sleep 60s      
-  echo "[$(date)] Starting RTDB Maintainer deployment" 
-  kubectl scale deployment rtdbmaintainerservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[25]} == true ]]; then  
-  sleep 60s      
-  echo "[$(date)] Starting Device Simulator deployment" 
-  kubectl scale deployment devicesimulator --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[27]} == true ]]; then  
-  sleep 60s      
-  echo "[$(date)] Starting Monitoring UI deployment" 
-  kubectl scale deployment monitoringuiservice --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[29]} == true ]]; then  
-  sleep 60s  
-  echo "[$(date)] Starting Notebooks deployment" 
-  kubectl scale deployment zeppelin --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[31]} == true ]]; then  
-  sleep 60s  
-  echo "[$(date)] Starting Streamsets deployment" 
-  kubectl scale deployment streamsets --namespace=$k8s_namespace --replicas=1
-fi
-   
-if [[ ${params[33]} == true ]]; then  
-  sleep 60s    
-  echo "[$(date)] Starting Load Balancer deployment" 
-  kubectl scale deployment loadbalancer --namespace=$k8s_namespace --replicas=1  
+if [ "$40" = "stop" ]; then
+  if [[ ${params[3]} == true ]]; then
+    sleep 5s
+    echo "[$(date)] Starting configdb deployment" 
+    kubectl scale deployment configdb --namespace=$k8s_namespace --replicas=0  
+    sleep 10s
+    echo "[$(date)] Starting realtimdb deployment" 
+    kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=0
+    sleep 10s  
+    echo "[$(date)] Starting quasar deployment" 
+    kubectl scale deployment quasar --namespace=$k8s_namespace --replicas=0
+    sleep 10s 
+    echo "[$(date)] Starting elasticdb deployment" 
+    kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=0
+    sleep 10s 
+    echo "[$(date)] Starting schedulerdb deployment" 
+    kubectl scale deployment schedulerdb --namespace=$k8s_namespace --replicas=0 
+  fi
+  
+  if [[ ${params[5]} == true ]]; then
+    echo "[$(date)] Starting configinit deployment"
+    sleep 10s 
+    kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=0
+    sleep 300s  
+    kubectl scale deployment configinit --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[7]} == true ]]; then 
+    sleep 10s                 
+    echo "[$(date)] Starting zookeeper deployment" 
+    kubectl scale deployment zookeeper --namespace=$k8s_namespace --replicas=0 
+  fi
+  
+  if [[ ${params[9]} == true ]]; then  
+    sleep 20s  
+    echo "[$(date)] Starting Cache service" 
+    kubectl scale deployment cacheservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[11]} == true ]]; then  
+    sleep 30s      
+    echo "[$(date)] Starting Control Panel deployment" 
+    kubectl scale deployment controlpanelservice --namespace=$k8s_namespace --replicas=0
+    sleep 400s 
+  fi
+     
+  if [[ ${params[13]} == true ]]; then    
+    echo "[$(date)] Starting Semantic Information Broker deployment" 
+    kubectl scale deployment routerservice --namespace=$k8s_namespace --replicas=0  
+    sleep 60s
+  fi
+     
+  if [[ ${params[15]} == true ]]; then       
+    echo "[$(date)] Starting IoT broker deployment" 
+    kubectl scale deployment iotbrokerservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[17]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Starting OAuth deployment" 
+    kubectl scale deployment oauthservice --namespace=$k8s_namespace --replicas=0  
+  fi
+     
+  if [[ ${params[19]} == true ]]; then
+    sleep 60s    
+    echo "[$(date)] Starting API manager deployment" 
+    kubectl scale deployment apimanagerservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[21]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting DashBoard Engine deployment" 
+    kubectl scale deployment dashboardengineservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[23]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting RTDB Maintainer deployment" 
+    kubectl scale deployment rtdbmaintainerservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[25]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting Device Simulator deployment" 
+    kubectl scale deployment devicesimulator --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[27]} == true ]]; then  
+    sleep 60s      
+    echo "[$(date)] Starting Monitoring UI deployment" 
+    kubectl scale deployment monitoringuiservice --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[29]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Notebooks deployment" 
+    kubectl scale deployment zeppelin --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[31]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Streamsets deployment" 
+    kubectl scale deployment streamsets --namespace=$k8s_namespace --replicas=0
+  fi
+  
+  if [[ ${params[33]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Flowengine deployment" 
+    kubectl scale deployment flowengine --namespace=$k8s_namespace --replicas=0
+  fi
+  
+  if [[ ${params[35]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting rules-engine-service deployment" 
+    kubectl scale deployment rules-engine-service --namespace=$k8s_namespace --replicas=0
+  fi
+  
+  if [[ ${params[37]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Bpmengine deployment" 
+    kubectl scale deployment bpmengine --namespace=$k8s_namespace --replicas=0
+  fi
+     
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting Load Balancer deployment" 
+    kubectl scale deployment loadbalancer --namespace=$k8s_namespace --replicas=0  
+  fi
 fi

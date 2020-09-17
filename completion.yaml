@@ -16,4 +16,7 @@ flags:
 - monitoringui
 - notebooks
 - dataflow
+- flowengine
+- rulesengine
+- bpmengine
 - loadbalancer
