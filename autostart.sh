@@ -7,7 +7,7 @@ help() {
   echo
   echo "Plugin usage:"
   echo
-  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> <start/stop>"
+  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> <start/stop/status>"
   echo
 }
 
@@ -448,5 +448,133 @@ if [ "$40" = "stop" ]; then
     sleep 60s    
     echo "[$(date)] Starting Load Balancer deployment" 
     kubectl scale deployment loadbalancer --namespace=$k8s_namespace --replicas=0  
+  fi
+fi
+
+if [ "$40" = "status" ]; then
+  if [[ ${params[3]} == true ]]; then
+    sleep 2s
+    echo "[$(date)] Configdb status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'configdb' | awk {'print $3'}  
+    sleep 2s
+    echo "[$(date)] Realtimedb status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'realtimedb' | awk {'print $3'}  
+    sleep 2s  
+    echo "[$(date)] Quasar status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'quasar' | awk {'print $3'}  
+    sleep 2s 
+    echo "[$(date)] Elasticdb status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'elastidb' | awk {'print $3'}  
+    sleep 2s 
+    echo "[$(date)] Schedulerdb status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'schedulerdb' | awk {'print $3'}  
+  fi
+  
+  if [[ ${params[5]} == true ]]; then
+    sleep 2s
+    echo "[$(date)] Configinit status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'configinti' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[7]} == true ]]; then 
+    sleep 2s                 
+    echo "[$(date)] Zookeeper status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'zookeeper' | awk {'print $3'}  
+  fi
+  
+  if [[ ${params[9]} == true ]]; then  
+    sleep 2s                 
+    echo "[$(date)] Cacheservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'cacheservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[11]} == true ]]; then  
+    sleep 2s                 
+    echo "[$(date)] Controlpanel status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'controlpanel' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[13]} == true ]]; then    
+    sleep 2s                 
+    echo "[$(date)] Router status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'routerservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[15]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Iot-broker status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'iotbrokerservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[17]} == true ]]; then    
+    sleep 2s     
+    echo "[$(date)] Oauthservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'oauthservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[19]} == true ]]; then
+    sleep 2s     
+    echo "[$(date)] Apimanager status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'apimanagerservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[21]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Dashboard status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'dashboardengineservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[23]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] RTDB status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'rtdbmaintainerservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[25]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Devicesimulator status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'devicesimulator' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[27]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Monitoringui status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'monitoringuiservice' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[29]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Notebook status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'zeppelin' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[31]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Streamsets status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'streamsets' | awk {'print $3'}  
+  fi
+  
+  if [[ ${params[33]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Flowengine status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'flowengine' | awk {'print $3'}  
+  fi
+  
+  if [[ ${params[35]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Rules-engine status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'rules-engine-service' | awk {'print $3'}  
+  fi
+  
+  if [[ ${params[37]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] BPM status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'bpmengine' | awk {'print $3'}  
+  fi
+     
+  if [[ ${params[39]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Loadbalancer status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'loadbalancer' | awk {'print $3'}  
   fi
 fi
