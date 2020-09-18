@@ -191,7 +191,7 @@ echo "[$(date)] Loadbalancer deployment:"
 echo ${params[39]}
 
 
-if [ "$40" = "start" ]; then
+if [[ ${params[40]} == "start" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
     echo "[$(date)] Starting configdb deployment" 
@@ -321,7 +321,8 @@ if [ "$40" = "start" ]; then
   fi
 fi
 
-if [ "$40" = "stop" ]; then
+
+if [[ ${params[40]} == "stop" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
     echo "[$(date)] Starting configdb deployment" 
@@ -451,7 +452,7 @@ if [ "$40" = "stop" ]; then
   fi
 fi
 
-if [ "$40" = "status" ]; then
+if [[ ${params[40]} == "status" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 2s
     echo "[$(date)] Configdb status" 
