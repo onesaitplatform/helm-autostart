@@ -48,7 +48,7 @@ Requirements:
   - rulesengine: enables rulesengine deployment
   - bmpengine: enables bmpengine deployment
   - loadbalancer: enables loadbalancer deployment
-
+- Available jobs:
   - start: Scale to 1 the selected modules
   - stop: Scale to 0 the selected modules
   - status: Returns the pod status of the selected modules
