@@ -49,6 +49,9 @@ Requirements:
   - bmpengine: enables bmpengine deployment
   - loadbalancer: enables loadbalancer deployment
 
+  - start: Scale to 1 the selected modules
+  - stop: Scale to 0 the selected modules
+  - status: Returns the pod status of the selected modules
 ```
 > helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --configinit <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> <start/stop/status>
 ```
