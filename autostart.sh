@@ -199,15 +199,9 @@ if [[ ${params[40]} == "start" ]]; then
     sleep 10s
     echo "[$(date)] Starting realtimdb deployment" 
     kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=1
-    sleep 10s  
-    echo "[$(date)] Starting quasar deployment" 
-    kubectl scale deployment quasar --namespace=$k8s_namespace --replicas=1
     sleep 10s 
     echo "[$(date)] Starting elasticdb deployment" 
     kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=1
-    sleep 10s 
-    echo "[$(date)] Starting schedulerdb deployment" 
-    kubectl scale deployment schedulerdb --namespace=$k8s_namespace --replicas=1 
   fi
   
   if [[ ${params[5]} == true ]]; then
@@ -330,15 +324,9 @@ if [[ ${params[40]} == "stop" ]]; then
     sleep 10s
     echo "[$(date)] Starting realtimdb deployment" 
     kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=0
-    sleep 10s  
-    echo "[$(date)] Starting quasar deployment" 
-    kubectl scale deployment quasar --namespace=$k8s_namespace --replicas=0
     sleep 10s 
     echo "[$(date)] Starting elasticdb deployment" 
     kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=0
-    sleep 10s 
-    echo "[$(date)] Starting schedulerdb deployment" 
-    kubectl scale deployment schedulerdb --namespace=$k8s_namespace --replicas=0 
   fi
   
   if [[ ${params[5]} == true ]]; then
@@ -459,16 +447,10 @@ if [[ ${params[40]} == "status" ]]; then
     kubectl get pods --namespace=$k8s_namespace | grep 'configdb' | awk {'print $3'}  
     sleep 2s
     echo "[$(date)] Realtimedb status" 
-    kubectl get pods --namespace=$k8s_namespace | grep 'realtimedb' | awk {'print $3'}  
-    sleep 2s  
-    echo "[$(date)] Quasar status" 
-    kubectl get pods --namespace=$k8s_namespace | grep 'quasar' | awk {'print $3'}  
+    kubectl get pods --namespace=$k8s_namespace | grep 'realtimedb' | awk {'print $3'}    
     sleep 2s 
     echo "[$(date)] Elasticdb status" 
-    kubectl get pods --namespace=$k8s_namespace | grep 'elastidb' | awk {'print $3'}  
-    sleep 2s 
-    echo "[$(date)] Schedulerdb status" 
-    kubectl get pods --namespace=$k8s_namespace | grep 'schedulerdb' | awk {'print $3'}  
+    kubectl get pods --namespace=$k8s_namespace | grep 'elastidb' | awk {'print $3'}   
   fi
   
   if [[ ${params[5]} == true ]]; then
