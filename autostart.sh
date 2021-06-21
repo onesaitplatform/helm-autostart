@@ -13,7 +13,7 @@ help() {
 
 parseParams() {
 
-  if [[ ${#params[@]} -lt 41 ]]; then
+  if [[ ${#params[@]} -lt 39 ]]; then
     echo "Bad number of params!"
     help
     exit 1
