@@ -7,13 +7,13 @@ help() {
   echo
   echo "Plugin usage:"
   echo
-  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> <start/stop/status>"
+  echo "helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> --gravitee <true/false> --keycloak <true/false> --graylog <true/false> <start/stop/status>"
   echo
 }
 
 parseParams() {
 
-  if [[ ${#params[@]} -lt 39 ]]; then
+  if [[ ${#params[@]} -lt 45 ]]; then
     echo "Bad number of params!"
     help
     exit 1
@@ -134,6 +134,24 @@ parseParams() {
     exit 1
   fi
 
+  if [[ ${params[38]} != '--gravitee' ]]; then
+    echo "Bad parameter! --gravitee"
+    help
+    exit 1
+  fi
+
+  if [[ ${params[40]} != '--keycloak' ]]; then
+    echo "Bad parameter! --keycloak"
+    help
+    exit 1
+  fi
+
+  if [[ ${params[42]} != '--graylog' ]]; then
+    echo "Bad parameter! --graylog"
+    help
+    exit 1
+  fi
+
   k8s_namespace=${params[1]}
 
 }
@@ -181,9 +199,15 @@ echo "[$(date)] Bpmengine deployment:"
 echo ${params[35]}
 echo "[$(date)] Loadbalancer deployment:"
 echo ${params[37]}
+echo "[$(date)] Gravitee deployment:"
+echo ${params[39]}
+echo "[$(date)] Keycloak deployment:"
+echo ${params[41]}
+echo "[$(date)] Graylog deployment:"
+echo ${params[43]}
 
 
-if [[ ${params[38]} == "start" ]]; then
+if [[ ${params[44]} == "start" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
     echo "[$(date)] Starting configdb deployment" 
@@ -207,12 +231,37 @@ if [[ ${params[38]} == "start" ]]; then
     echo "[$(date)] Starting Cache service" 
     kubectl scale deployment cacheservice --namespace=$k8s_namespace --replicas=1
   fi
-     
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting  Gravitee Gateway deployment" 
+    kubectl scale deployment  graviteegatewayservice --namespace=$k8s_namespace --replicas=1  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting  Gravitee Management deployment" 
+    kubectl scale deployment  graviteemngservice --namespace=$k8s_namespace --replicas=1  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Starting Gravitee UI deployment" 
+    kubectl scale deployment  graviteeuiservice --namespace=$k8s_namespace --replicas=1
+    sleep 10s  
+  fi
+
   if [[ ${params[9]} == true ]]; then  
     sleep 30s      
     echo "[$(date)] Starting Control Panel deployment" 
     kubectl scale deployment controlpanelservice --namespace=$k8s_namespace --replicas=1
     sleep 400s 
+  fi
+     
+  if [[ ${params[43]} == true ]]; then  
+    sleep 30s      
+    echo "[$(date)] Starting Graylog deployment" 
+    kubectl scale deployment  log-centralizer --namespace=$k8s_namespace --replicas=1
   fi
      
   if [[ ${params[11]} == true ]]; then    
@@ -230,6 +279,18 @@ if [[ ${params[38]} == "start" ]]; then
     sleep 60s      
     echo "[$(date)] Starting OAuth deployment" 
     kubectl scale deployment oauthservice --namespace=$k8s_namespace --replicas=1  
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Starting Keycloak deployment" 
+    kubectl scale deployment keycloak --namespace=$k8s_namespace --replicas=1  
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Starting Keycloak Manager deployment" 
+    kubectl scale deployment keycloakmanager --namespace=$k8s_namespace --replicas=1  
   fi
      
   if [[ ${params[17]} == true ]]; then
@@ -300,123 +361,160 @@ if [[ ${params[38]} == "start" ]]; then
 fi
 
 
-if [[ ${params[38]} == "stop" ]]; then
+if [[ ${params[44]} == "stop" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
-    echo "[$(date)] Starting configdb deployment" 
+    echo "[$(date)] Stopping configdb deployment" 
     kubectl scale deployment configdb --namespace=$k8s_namespace --replicas=0  
     sleep 10s
-    echo "[$(date)] Starting realtimdb deployment" 
+    echo "[$(date)] Stopping realtimdb deployment" 
     kubectl scale deployment realtimedb --namespace=$k8s_namespace --replicas=0
     sleep 10s 
-    echo "[$(date)] Starting elasticdb deployment" 
+    echo "[$(date)] Stopping elasticdb deployment" 
     kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[5]} == true ]]; then 
     sleep 10s                 
-    echo "[$(date)] Starting zookeeper deployment" 
+    echo "[$(date)] Stopping zookeeper deployment" 
     kubectl scale deployment zookeeper --namespace=$k8s_namespace --replicas=0 
   fi
   
   if [[ ${params[7]} == true ]]; then  
     sleep 20s  
-    echo "[$(date)] Starting Cache service" 
+    echo "[$(date)] Stopping Cache service" 
     kubectl scale deployment cacheservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[9]} == true ]]; then  
     sleep 30s      
-    echo "[$(date)] Starting Control Panel deployment" 
+    echo "[$(date)] Stopping Control Panel deployment" 
     kubectl scale deployment controlpanelservice --namespace=$k8s_namespace --replicas=0
     sleep 400s 
   fi
      
   if [[ ${params[11]} == true ]]; then    
-    echo "[$(date)] Starting Semantic Information Broker deployment" 
+    echo "[$(date)] Stopping Semantic Information Broker deployment" 
     kubectl scale deployment routerservice --namespace=$k8s_namespace --replicas=0  
     sleep 60s
   fi
      
   if [[ ${params[13]} == true ]]; then       
-    echo "[$(date)] Starting IoT broker deployment" 
+    echo "[$(date)] Stopping IoT broker deployment" 
     kubectl scale deployment iotbrokerservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[15]} == true ]]; then    
     sleep 60s      
-    echo "[$(date)] Starting OAuth deployment" 
+    echo "[$(date)] Stopping OAuth deployment" 
     kubectl scale deployment oauthservice --namespace=$k8s_namespace --replicas=0  
   fi
      
   if [[ ${params[17]} == true ]]; then
     sleep 60s    
-    echo "[$(date)] Starting API manager deployment" 
+    echo "[$(date)] Stopping API manager deployment" 
     kubectl scale deployment apimanagerservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[19]} == true ]]; then  
     sleep 60s    
-    echo "[$(date)] Starting DashBoard Engine deployment" 
+    echo "[$(date)] Stopping DashBoard Engine deployment" 
     kubectl scale deployment dashboardengineservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[21]} == true ]]; then  
     sleep 60s      
-    echo "[$(date)] Starting RTDB Maintainer deployment" 
+    echo "[$(date)] Stopping RTDB Maintainer deployment" 
     kubectl scale deployment rtdbmaintainerservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[23]} == true ]]; then  
     sleep 60s      
-    echo "[$(date)] Starting Device Simulator deployment" 
+    echo "[$(date)] Stopping Device Simulator deployment" 
     kubectl scale deployment devicesimulator --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[25]} == true ]]; then  
     sleep 60s      
-    echo "[$(date)] Starting Monitoring UI deployment" 
+    echo "[$(date)] Stopping Monitoring UI deployment" 
     kubectl scale deployment monitoringuiservice --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[27]} == true ]]; then  
     sleep 60s  
-    echo "[$(date)] Starting Notebooks deployment" 
+    echo "[$(date)] Stopping Notebooks deployment" 
     kubectl scale deployment zeppelin --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[29]} == true ]]; then  
     sleep 60s  
-    echo "[$(date)] Starting Streamsets deployment" 
+    echo "[$(date)] Stopping Streamsets deployment" 
     kubectl scale deployment streamsets --namespace=$k8s_namespace --replicas=0
   fi
   
   if [[ ${params[31]} == true ]]; then  
     sleep 60s  
-    echo "[$(date)] Starting Flowengine deployment" 
+    echo "[$(date)] Stopping Flowengine deployment" 
     kubectl scale deployment flowengine --namespace=$k8s_namespace --replicas=0
   fi
   
   if [[ ${params[33]} == true ]]; then  
     sleep 60s  
-    echo "[$(date)] Starting rules-engine-service deployment" 
+    echo "[$(date)] Stopping rules-engine-service deployment" 
     kubectl scale deployment rules-engine-service --namespace=$k8s_namespace --replicas=0
   fi
   
   if [[ ${params[35]} == true ]]; then  
     sleep 60s  
-    echo "[$(date)] Starting Bpmengine deployment" 
+    echo "[$(date)] Stopping Bpmengine deployment" 
     kubectl scale deployment bpmengine --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[37]} == true ]]; then  
     sleep 60s    
-    echo "[$(date)] Starting Load Balancer deployment" 
+    echo "[$(date)] Stopping Load Balancer deployment" 
     kubectl scale deployment loadbalancer --namespace=$k8s_namespace --replicas=0  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Stopping  Gravitee Gateway deployment" 
+    kubectl scale deployment  graviteegatewayservice --namespace=$k8s_namespace --replicas=0  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Stopping  Gravitee Management deployment" 
+    kubectl scale deployment  graviteemngservice --namespace=$k8s_namespace --replicas=0  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 60s    
+    echo "[$(date)] Stopping Gravitee UI deployment" 
+    kubectl scale deployment  graviteeuiservice --namespace=$k8s_namespace --replicas=0
+    sleep 10s  
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Stopping Keycloak deployment" 
+    kubectl scale deployment keycloak --namespace=$k8s_namespace --replicas=0  
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 60s      
+    echo "[$(date)] Stopping Keycloak Manager deployment" 
+    kubectl scale deployment keycloakmanager --namespace=$k8s_namespace --replicas=0  
+  fi
+
+  if [[ ${params[43]} == true ]]; then  
+    sleep 30s      
+    echo "[$(date)] Stopping Graylog deployment" 
+    kubectl scale deployment  log-centralizer --namespace=$k8s_namespace --replicas=0
   fi
 fi
 
-if [[ ${params[38]} == "status" ]]; then
+if [[ ${params[44]} == "status" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 2s
     echo "[$(date)] Configdb status" 
@@ -529,5 +627,41 @@ if [[ ${params[38]} == "status" ]]; then
     sleep 2s     
     echo "[$(date)] Loadbalancer status" 
     kubectl get pods --namespace=$k8s_namespace | grep 'loadbalancer' | awk {'print $3'}  
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Gravitee Gateway status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'graviteegatewayservice' | awk {'print $3'}
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Gravitee Manager status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'graviteemngservice' | awk {'print $3'}
+  fi
+
+  if [[ ${params[39]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Gravitee UI status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'graviteeuiservice' | awk {'print $3'}
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 2s     
+    echo "[$(date)] Keycloak status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'keycloak' | awk {'print $3'}
+  fi
+
+  if [[ ${params[41]} == true ]]; then    
+    sleep 2s     
+    echo "[$(date)] Keycloak Manager status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'keycloakmanager' | awk {'print $3'}
+  fi
+
+  if [[ ${params[43]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] Graylog status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'log-centralizer' | awk {'print $3'}
   fi
 fi
