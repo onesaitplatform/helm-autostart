@@ -20,3 +20,6 @@ flags:
 - rulesengine
 - bpmengine
 - loadbalancer
+- gravitee
+- keycloak
+- graylog
