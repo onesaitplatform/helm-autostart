@@ -13,7 +13,7 @@ description: |-
 
   or simply
 
-  > helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> --gravitee <true/false> --keycloak <true/false> --graylog <true/false> <start/stop/status>
+  > helm autostart --k8s_namespace <namespace_name> --peristence <true/false> --zookeeper <true/false> --cacheservice <true/false> --controlpanel <true/false> --router <true/false> --iotbroker <true/false> --oauth <true/false> --apimanager <true/false> --dashboard <true/false> --rtdbmaintainer <true/false> --devicesimulator <true/false> --monitoringui <true/false> --notebooks <true/false> --dataflow <true/false> --flowengine <true/false> --rulesengine <true/false> --bpmengine <true/false> --loadbalancer <true/false> --gravitee <true/false> --keycloak <true/false> --graylog <true/false> --ckan <true/false> --datacleaner <true/false>  <start/stop/status>
 ignoreFlags: false
 command: "$HELM_PLUGIN_DIR/autostart.sh"
 hooks:
