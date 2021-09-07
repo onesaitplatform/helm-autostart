@@ -152,6 +152,18 @@ parseParams() {
     exit 1
   fi
 
+  if [[ ${params[44]} != '--ckan' ]]; then
+    echo "Bad parameter! --ckan"
+    help
+    exit 1
+  fi
+
+  if [[ ${params[46]} != '--datacleaner' ]]; then
+    echo "Bad parameter! --datacleaner"
+    help
+    exit 1
+  fi
+
   k8s_namespace=${params[1]}
 
 }
@@ -205,9 +217,13 @@ echo "[$(date)] Keycloak deployment:"
 echo ${params[41]}
 echo "[$(date)] Graylog deployment:"
 echo ${params[43]}
+echo "[$(date)] Ckan deployment:"
+echo ${params[45]}
+echo "[$(date)] Datacleaner deployment:"
+echo ${params[47]}
 
 
-if [[ ${params[44]} == "start" ]]; then
+if [[ ${params[48]} == "start" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
     echo "[$(date)] Starting configdb deployment" 
@@ -220,6 +236,27 @@ if [[ ${params[44]} == "start" ]]; then
     kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=1
   fi
      
+  if [[ ${params[45]} == true ]]; then
+    sleep 5s
+    echo "[$(date)] Starting ckanservice deployment" 
+    kubectl scale deployment ckanservice --namespace=$k8s_namespace --replicas=1  
+    sleep 10s
+    echo "[$(date)] Starting db-ckan deployment" 
+    kubectl scale deployment db-ckan --namespace=$k8s_namespace --replicas=1
+    sleep 10s 
+    echo "[$(date)] Starting redisservice deployment" 
+    kubectl scale deployment redisservice --namespace=$k8s_namespace --replicas=1
+    sleep 5s
+    echo "[$(date)] Starting solrservice deployment" 
+    kubectl scale deployment solrservice --namespace=$k8s_namespace --replicas=1  
+    sleep 10s
+    echo "[$(date)] Starting datapusherservice deployment" 
+    kubectl scale deployment datapusherservice --namespace=$k8s_namespace --replicas=1
+    sleep 10s 
+    echo "[$(date)] Starting initckan deployment" 
+    kubectl scale deployment initckan --namespace=$k8s_namespace --replicas=1
+  fi
+
   if [[ ${params[5]} == true ]]; then 
     sleep 10s                 
     echo "[$(date)] Starting zookeeper deployment" 
@@ -352,6 +389,12 @@ if [[ ${params[44]} == "start" ]]; then
     echo "[$(date)] Starting Bpmengine deployment" 
     kubectl scale deployment bpmengine --namespace=$k8s_namespace --replicas=1
   fi
+
+  if [[ ${params[47]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Datacleaner deployment" 
+    kubectl scale deployment datacleanerservice --namespace=$k8s_namespace --replicas=1
+  fi
      
   if [[ ${params[37]} == true ]]; then  
     sleep 60s    
@@ -361,7 +404,7 @@ if [[ ${params[44]} == "start" ]]; then
 fi
 
 
-if [[ ${params[44]} == "stop" ]]; then
+if [[ ${params[48]} == "stop" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 5s
     echo "[$(date)] Stopping configdb deployment" 
@@ -372,6 +415,27 @@ if [[ ${params[44]} == "stop" ]]; then
     sleep 10s 
     echo "[$(date)] Stopping elasticdb deployment" 
     kubectl scale deployment elasticdb --namespace=$k8s_namespace --replicas=0
+  fi
+
+  if [[ ${params[45]} == true ]]; then
+    sleep 5s
+    echo "[$(date)] Starting ckanservice deployment" 
+    kubectl scale deployment ckanservice --namespace=$k8s_namespace --replicas=0  
+    sleep 10s
+    echo "[$(date)] Starting db-ckan deployment" 
+    kubectl scale deployment db-ckan --namespace=$k8s_namespace --replicas=0
+    sleep 10s 
+    echo "[$(date)] Starting redisservice deployment" 
+    kubectl scale deployment redisservice --namespace=$k8s_namespace --replicas=0
+    sleep 5s
+    echo "[$(date)] Starting solrservice deployment" 
+    kubectl scale deployment solrservice --namespace=$k8s_namespace --replicas=0  
+    sleep 10s
+    echo "[$(date)] Starting datapusherservice deployment" 
+    kubectl scale deployment datapusherservice --namespace=$k8s_namespace --replicas=0
+    sleep 10s 
+    echo "[$(date)] Starting initckan deployment" 
+    kubectl scale deployment initckan --namespace=$k8s_namespace --replicas=0
   fi
      
   if [[ ${params[5]} == true ]]; then 
@@ -512,9 +576,15 @@ if [[ ${params[44]} == "stop" ]]; then
     echo "[$(date)] Stopping Graylog deployment" 
     kubectl scale deployment  log-centralizer --namespace=$k8s_namespace --replicas=0
   fi
+
+  if [[ ${params[47]} == true ]]; then  
+    sleep 60s  
+    echo "[$(date)] Starting Datacleaner deployment" 
+    kubectl scale deployment datacleanerservice --namespace=$k8s_namespace --replicas=0
+  fi
 fi
 
-if [[ ${params[44]} == "status" ]]; then
+if [[ ${params[48]} == "status" ]]; then
   if [[ ${params[3]} == true ]]; then
     sleep 2s
     echo "[$(date)] Configdb status" 
@@ -663,5 +733,32 @@ if [[ ${params[44]} == "status" ]]; then
     sleep 2s     
     echo "[$(date)] Graylog status" 
     kubectl get pods --namespace=$k8s_namespace | grep 'log-centralizer' | awk {'print $3'}
+  fi
+
+  if [[ ${params[45]} == true ]]; then
+    sleep 2s     
+    echo "[$(date)] ckanservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'ckanservice' | awk {'print $3'}
+    sleep 2s     
+    echo "[$(date)] db-ckan status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'db-ckan' | awk {'print $3'}
+    sleep 2s     
+    echo "[$(date)] redisservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'redisservice' | awk {'print $3'}
+    sleep 2s     
+    echo "[$(date)] solrservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'solrservice' | awk {'print $3'}
+    sleep 2s     
+    echo "[$(date)] datapusherservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'datapusherservice' | awk {'print $3'}
+    sleep 2s     
+    echo "[$(date)] initckan status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'initckan' | awk {'print $3'}
+  fi
+
+  if [[ ${params[47]} == true ]]; then  
+    sleep 2s     
+    echo "[$(date)] datacleanerservice status" 
+    kubectl get pods --namespace=$k8s_namespace | grep 'datacleanerservice' | awk {'print $3'}
   fi
 fi
